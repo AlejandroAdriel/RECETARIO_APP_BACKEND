@@ -1,26 +1,30 @@
-import express from "express"
-import recipesRouter from "./routes/recipesRoutes.js"
-import dotenv from "dotenv"
-import { connectDB } from "./config/db.js"
+import express from "express";
+import recipesRouter from "./routes/recipesRoutes.js";
+import dotenv from "dotenv";
+import { connectDB } from "./config/db.js";
+import cors from "cors";
 
-dotenv.config()
+dotenv.config();
 
-const app = express()
+const app = express();
 
-app.use(express.json())
+app.use(
+  cors({
+    origin: [
+        "http://localhost:3000", 
+        "https://myproductiondomain.com",
+    ],
+  })
+);
 
-app.use("/api/recipes", recipesRouter)
+app.use(express.json());
 
-const PORT = process.env.PORT || 3001
+app.use("/api/recipes", recipesRouter);
 
-console.log(process.env.PORT)
+const PORT = process.env.PORT || 3001;
 
-connectDB()
-.then(() => {
-
-    app.listen(PORT, () => {
-    console.log(`servidor corriendo en puerto http://localhost:${PORT}`)
-    })
-
-})
-
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`servidor corriendo en puerto http://localhost:${PORT}`);
+  });
+});
