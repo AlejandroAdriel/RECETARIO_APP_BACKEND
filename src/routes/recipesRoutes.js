@@ -1,88 +1,168 @@
 import express from "express";
 import Recipe from "../models/recipeModel.js";
-import { now } from "mongoose";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
-//obtener todas las recetas
-router.get("/", async (req, res) => {
-  try {
-    const recipe = await Recipe.find();
-    res.status(200).json(recipe);
-  } catch (error) {
-    console.error("Error al obtener la receta", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-//obtener una receta por id
-router.get("/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const recipe = await Recipe.findById(id);
-    if (!recipe) return res.status(404).json({ error: "Receta no encontrada" });
-    res.status(200).json(recipe);
-  } catch (error) {
-    console.error("Error al obtener una nota por id", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-//Crear una nueva receta
+// Crear una nueva receta
 router.post("/", async (req, res) => {
   try {
-    const { name, description } = req.body;
-    const recipe = new Recipe({ name, description });
+    const { 
+      name, 
+      description, 
+      image, 
+      cookTime, 
+      servings, 
+      difficulty, 
+      category, 
+      ingredients, 
+      instructions 
+    } = req.body;
+
+    if (!name || !description) {
+      return res.status(400).json({ error: "Nombre y descripción son requeridos" });
+    }
+
+    const recipe = new Recipe({ 
+      name, 
+      description, 
+      image, 
+      cookTime, 
+      servings, 
+      difficulty, 
+      category, 
+      ingredients, 
+      instructions 
+    });
 
     const savedRecipe = await recipe.save();
 
     if (savedRecipe) {
-      res
-        .status(201)
-        .json({ message: "Receta creada correctamente ", Recipe: savedRecipe });
+      res.status(201).json({ 
+        message: "Receta creada correctamente", 
+        recipe: savedRecipe 
+      });
     }
   } catch (error) {
-    console.error("Error al crear una nota", error);
+    console.error("Error al crear una receta", error);
+    if (error.code === 11000) {
+      return res.status(400).json({ error: "El ID de la receta ya existe" });
+    }
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-//Eliminar una receta
-router.delete("/:id", async (req, res) => {
+// Obtener todas las recetas
+router.get("/", async (req, res) => {
+  try {
+    const recipes = await Recipe.find();
+    res.status(200).json(recipes);
+  } catch (error) {
+    console.error("Error al obtener las recetas", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Obtener una receta por id 
+router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const deletedNote = await Recipe.findByIdAndDelete(id);
-    if (!deletedNote)
-      return res.status(404).json({ error: "Receta no eliminada" });
-    res.status(200).json({ message: "Nota eliminada correctamente" });
+    const recipe = await Recipe.findOne({ _id: id });
+    
+    if (!recipe) return res.status(404).json({ error: "Receta no encontrada" });
+    res.status(200).json(recipe);
   } catch (error) {
-    console.error("Error al eliminar una nota", error);
+    console.error("Error al obtener una receta por id", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-//Editar una receta
+// Editar una receta
 router.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, description } = req.body;
-    const updateRecipe = await Recipe.findByIdAndUpdate(
-      id,
-      { name, description },
-      { new: true }
+    const { 
+      name, 
+      description, 
+      image, 
+      cookTime, 
+      servings, 
+      difficulty, 
+      category, 
+      ingredients, 
+      instructions 
+    } = req.body;
+
+    const updateRecipe = await Recipe.findOneAndUpdate(
+      { _id: id },
+      { 
+        name, 
+        description, 
+        image, 
+        cookTime, 
+        servings, 
+        difficulty, 
+        category, 
+        ingredients, 
+        instructions 
+      },
+      { new: true, runValidators: true }
     );
-    if (!updateRecipe)
-      return res
-        .status(404)
-        .json({ error: "Error receta no actualizada correctamente" });
-    res
-      .status(200)
-      .json({
-        message: "Receta actualizada correctamente",
-        recipe: updateRecipe,
-      });
+
+    if (!updateRecipe) {
+      return res.status(404).json({ error: "Receta no encontrada" });
+    }
+
+    res.status(200).json({
+      message: "Receta actualizada correctamente",
+      recipe: updateRecipe,
+    });
   } catch (error) {
-    console.error("Error al actualixar una nota", error);
+    console.error("Error al actualizar una receta", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Actualización parcial de receta
+router.patch("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updateRecipe = await Recipe.findOneAndUpdate(
+      { _id: id },
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+
+    if (!updateRecipe) {
+      return res.status(404).json({ error: "Receta no encontrada" });
+    }
+
+    res.status(200).json({
+      message: "Receta actualizada correctamente",
+      recipe: updateRecipe,
+    });
+  } catch (error) {
+    console.error("Error al actualizar parcialmente una receta", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Eliminar una receta
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deletedRecipe = await Recipe.findOneAndDelete({ _id: id });
+
+    if (!deletedRecipe) {
+      return res.status(404).json({ error: "Receta no encontrada" });
+    }
+
+    res.status(200).json({ 
+      message: "Receta eliminada correctamente",
+      recipe: deletedRecipe 
+    });
+  } catch (error) {
+    console.error("Error al eliminar una receta", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
