@@ -10,7 +10,6 @@ router.post("/", async (req, res) => {
     const { 
       name, 
       description, 
-      image, 
       cookTime, 
       servings, 
       difficulty, 
@@ -26,7 +25,6 @@ router.post("/", async (req, res) => {
     const recipe = new Recipe({ 
       name, 
       description, 
-      image, 
       cookTime, 
       servings, 
       difficulty, 
@@ -77,7 +75,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Editar una receta
+// Editar una receta 
 router.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -123,7 +121,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Actualización parcial de receta
+// Actualización parcial de receta 
 router.patch("/:id", async (req, res) => {
   try {
     const id = req.params.id;

@@ -46,18 +46,27 @@ const recipeSchema = new mongoose.Schema(
 
 recipeSchema.pre('save', async function(next) {
   if (!this._id) {
-    const lastRecipe = await mongoose.model('Recipe')
-      .findOne()
-      .sort({ _id: -1 });
-    
-    let nextNumber = 1;
-    if (lastRecipe && lastRecipe._id) {
-      nextNumber = parseInt(lastRecipe._id) + 1;
+    try {
+      const lastRecipe = await mongoose.model('Recipe')
+        .findOne()
+        .sort({ _id: -1 });
+      
+      let nextNumber = 1;
+      if (lastRecipe && lastRecipe._id) {
+        nextNumber = parseInt(lastRecipe._id) + 1;
+      }
+      
+      const recipeId = String(nextNumber).padStart(6, '0');
+      this._id = recipeId;
+      this.image = `/assets/images/recipes/${recipeId}.jpg`;
+      
+      next();
+    } catch (error) {
+      next(error);
     }
-    
-    this._id = String(nextNumber).padStart(6, '0');
+  } else {
+    next();
   }
-  next();
 });
 
 const Recipe = mongoose.model("Recipe", recipeSchema);
