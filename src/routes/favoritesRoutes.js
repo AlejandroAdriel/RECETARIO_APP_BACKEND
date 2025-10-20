@@ -38,4 +38,20 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+// Eliminar receta de favoritos
+router.delete("/:recipeId/:userId", async (req, res) => {
+  const { recipeId, userId } = req.params;
+
+  try {
+    const eliminado = await Favorite.deleteOne({ userId, recipeId });
+    if (eliminado.deletedCount === 0) {
+      return res.status(404).json({ error: "Favorito no encontrado" });
+    }
+    res.status(200).json({ message: "Favorito eliminado" });
+  } catch (error) {
+    console.error("Error al eliminar favorito", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
 export default router;
