@@ -1,10 +1,11 @@
+// models/recipeModel.js
 import mongoose from "mongoose";
 
 const recipeSchema = new mongoose.Schema(
   {
     _id: {
       type: String,
-      required: false,
+      required: true
     },
     name: {
       type: String,
@@ -16,7 +17,7 @@ const recipeSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
+      required: true
     },
     cookTime: {
       type: Number,
@@ -44,8 +45,8 @@ const recipeSchema = new mongoose.Schema(
   }
 );
 
-recipeSchema.pre('save', async function(next) {
-  if (!this._id) {
+recipeSchema.pre('validate', async function(next) {
+  if (this.isNew && !this._id) {
     try {
       const lastRecipe = await mongoose.model('Recipe')
         .findOne()
@@ -62,6 +63,7 @@ recipeSchema.pre('save', async function(next) {
       
       next();
     } catch (error) {
+      console.error('Error generando ID:', error);
       next(error);
     }
   } else {
