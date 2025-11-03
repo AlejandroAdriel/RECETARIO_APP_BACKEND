@@ -4,9 +4,9 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import { connectDB } from "./config/db.js";
-
 import recipesRouter from "./routes/recipesRoutes.js";
 import favoritesRouter from "./routes/favoritesRoutes.js";
+import rdfRoutes from "./routes/rdfRoutes.js";
 
 dotenv.config();
 
@@ -31,11 +31,16 @@ app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
 app.use("/api/recipes", recipesRouter);
 app.use("/api/favorites", favoritesRouter);
+app.use("/rdf", rdfRoutes);
 
 const PORT = process.env.PORT || 3001;
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Servidor corriendo en puerto ${PORT}`);
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Servidor corriendo en puerto ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Error al conectar a MongoDB:", error);
   });
-});
