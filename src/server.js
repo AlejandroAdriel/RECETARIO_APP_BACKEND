@@ -30,6 +30,7 @@ app.use(express.json());
 
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
+// Configuración de rutas
 app.use("/api/auth", authRoutes); 
 app.use("/api/recipes", recipesRouter);
 app.use("/api/favorites", favoritesRouter);
