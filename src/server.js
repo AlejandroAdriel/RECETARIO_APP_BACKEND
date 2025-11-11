@@ -7,6 +7,7 @@ import { connectDB } from "./config/db.js";
 import recipesRouter from "./routes/recipesRoutes.js";
 import favoritesRouter from "./routes/favoritesRoutes.js";
 import rdfRoutes from "./routes/rdfRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -21,7 +22,6 @@ app.use(
       "http://localhost:3000",
       "http://localhost:5173",
       "https://super-recetario.vercel.app",
-      "https://vpqixtolbapkwrpsbiyw.supabase.co",
     ],
   })
 );
@@ -30,6 +30,7 @@ app.use(express.json());
 
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
+app.use("/api/auth", authRoutes); 
 app.use("/api/recipes", recipesRouter);
 app.use("/api/favorites", favoritesRouter);
 app.use("/rdf", rdfRoutes);
