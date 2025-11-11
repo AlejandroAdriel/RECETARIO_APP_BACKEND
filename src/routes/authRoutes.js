@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
+/*
 // ids de mongo para guardar recetas
 router.put('/favorites/:id', async (req, res) => {
   const { id } = req.params;
@@ -75,6 +75,6 @@ router.put('/favorites/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
+});*/
 
 export default router;
