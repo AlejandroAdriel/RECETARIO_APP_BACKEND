@@ -21,6 +21,7 @@ app.use(
       "http://localhost:3000",
       "http://localhost:5173",
       "https://super-recetario.vercel.app",
+      "https://vpqixtolbapkwrpsbiyw.supabase.co",
     ],
   })
 );
