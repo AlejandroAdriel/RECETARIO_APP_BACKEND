@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-/*
+
 // ids de mongo para guardar recetas
 router.put('/favorites/:id', async (req, res) => {
   const { id } = req.params;
@@ -75,6 +75,46 @@ router.put('/favorites/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});*/
+});
+
+
+// Obtener todos los favoritos de un usuario
+router.get('/favorites/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const { data, error } = await supabase
+      .from('favorites')
+      .select('*')
+      .eq('user_id', id);
+
+    if (error) throw error;
+
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+// Eliminar un favorito
+router.delete('/favorites/:id', async (req, res) => {
+  const { id } = req.params;
+  const { recipeId } = req.body;
+
+  try {
+    const { error } = await supabase
+      .from('favorites')
+      .delete()
+      .eq('user_id', id)
+      .eq('recipe_id', recipeId);
+
+    if (error) throw error;
+
+    res.json({ message: 'Favorito eliminado correctamente' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 export default router;
