@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ALLOWED_RESTRICTIONS = ["vegetariano", "sinlacteos", "singluten"];
+const ALLOWED_RESTRICTIONS = ["vegetariano", "sin lacteos", "sin gluten"];
 
 const recipeSchema = new mongoose.Schema(
   {
@@ -37,7 +37,7 @@ const recipeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    restricciones: {
+    restrictions: {
       type: [String],
       default: [],
       enum: {
