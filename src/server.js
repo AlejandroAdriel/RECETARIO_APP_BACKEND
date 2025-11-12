@@ -1,5 +1,5 @@
+import 'dotenv/config';
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -8,8 +8,6 @@ import recipesRouter from "./routes/recipesRoutes.js";
 import favoritesRouter from "./routes/favoritesRoutes.js";
 import rdfRoutes from "./routes/rdfRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,6 +25,17 @@ app.use(
 );
 
 app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: "activo",
+        message: "API del Recetario funcionando correctamente.",
+        endpoints_principales: {
+            auth: "/api/auth",
+            recetas: "/api/recipes",
+        },
+    });
+});
 
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
