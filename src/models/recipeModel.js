@@ -40,11 +40,17 @@ const recipeSchema = new mongoose.Schema(
     restrictions: {
       type: [String],
       default: [],
-      enum: {
-        values: ALLOWED_RESTRICTIONS,
-        message: `Restricción no válida. Las opciones permitidas son: ${ALLOWED_RESTRICTIONS.join(
-          ", "
-        )}.`,
+      validate: {
+        validator: function (v) {
+          if (v.length === 0) return true;
+          return v.every((val) => ALLOWED_RESTRICTIONS.includes(val));
+        },
+        message: (props) =>
+          `Restricción no válida. Las opciones permitidas son: ${ALLOWED_RESTRICTIONS.join(
+            ", "
+          )}. Valor(es) recibido(s): ${props.value
+            .filter((val) => !ALLOWED_RESTRICTIONS.includes(val))
+            .join(", ")}.`,
       },
     },
     ingredients: [String],
@@ -78,6 +84,11 @@ recipeSchema.pre("validate", async function (next) {
       console.error("Error generando ID:", error);
       next(error);
     }
+  } else if (!this.isNew && this._id) {
+    if (!this.image) {
+      this.image = `/assets/images/recipes/${this._id}.jpg`;
+    }
+    next();
   } else {
     next();
   }

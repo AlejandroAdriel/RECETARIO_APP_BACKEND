@@ -7,38 +7,42 @@ const router = express.Router();
 // Crear una nueva receta
 router.post("/", async (req, res) => {
   try {
-    const { 
-      name, 
-      description, 
-      cookTime, 
-      servings, 
-      difficulty, 
-      category, 
-      ingredients, 
-      instructions 
+    const {
+      name,
+      description,
+      cookTime,
+      servings,
+      difficulty,
+      category,
+      restrictions,
+      ingredients,
+      instructions,
     } = req.body;
 
     if (!name || !description) {
-      return res.status(400).json({ error: "Nombre y descripción son requeridos" });
+      return res
+        .status(400)
+        .json({ error: "Nombre y descripción son requeridos" });
     }
 
-    const recipe = new Recipe({ 
-      name, 
-      description, 
-      cookTime, 
-      servings, 
-      difficulty, 
-      category, 
-      ingredients, 
-      instructions 
+    const recipe = new Recipe({
+      name,
+      description,
+      cookTime,
+      servings,
+      difficulty,
+      category,
+      restrictions,
+      ingredients,
+      instructions,
     });
 
     const savedRecipe = await recipe.save();
 
     if (savedRecipe) {
-      res.status(201).json({ 
-        message: "Receta creada correctamente", 
-        recipe: savedRecipe 
+      res.status(201).json({
+        message: "Receta creada correctamente",
+        recipe: savedRecipe,
       });
     }
   } catch (error) {
@@ -61,12 +65,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Obtener una receta por id 
+// Obtener una receta por id
 router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const recipe = await Recipe.findOne({ _id: id });
-    
     if (!recipe) return res.status(404).json({ error: "Receta no encontrada" });
     res.status(200).json(recipe);
   } catch (error) {
@@ -75,53 +78,41 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Editar una receta 
+// Editar una receta (PUT - Reemplazo Completo)
 router.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const { 
-      name, 
-      description, 
-      image, 
-      cookTime, 
-      servings, 
-      difficulty, 
-      category, 
-      ingredients, 
-      instructions 
-    } = req.body;
+    const updateData = {
+      ...req.body,
+      _id: id,
+    }; 
 
-    const updateRecipe = await Recipe.findOneAndUpdate(
-      { _id: id },
-      { 
-        name, 
-        description, 
-        image, 
-        cookTime, 
-        servings, 
-        difficulty, 
-        category, 
-        ingredients, 
-        instructions 
-      },
-      { new: true, runValidators: true }
-    );
+    const result = await Recipe.replaceOne({ _id: id }, updateData, {
+      runValidators: true,
+    });
 
-    if (!updateRecipe) {
+    if (result.matchedCount === 0) {
       return res.status(404).json({ error: "Receta no encontrada" });
     }
 
+    const updatedRecipe = await Recipe.findOne({ _id: id });
+
     res.status(200).json({
       message: "Receta actualizada correctamente",
-      recipe: updateRecipe,
+      recipe: updatedRecipe,
     });
   } catch (error) {
     console.error("Error al actualizar una receta", error);
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        error: "Error de validación: " + error.message,
+      });
+    }
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// Actualización parcial de receta 
+// Actualización parcial de receta
 router.patch("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -155,9 +146,9 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Receta no encontrada" });
     }
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: "Receta eliminada correctamente",
-      recipe: deletedRecipe 
+      recipe: deletedRecipe,
     });
   } catch (error) {
     console.error("Error al eliminar una receta", error);
