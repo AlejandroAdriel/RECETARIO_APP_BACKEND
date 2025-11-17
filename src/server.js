@@ -21,28 +21,29 @@ app.use(
       "http://localhost:5173",
       "https://super-recetario.vercel.app",
     ],
+    methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
   })
 );
 
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.status(200).json({
-        status: "activo",
-        message: "API del Recetario funcionando correctamente.",
-        endpoints_principales: {
-            auth: "/api/auth",
-            recetas: "/api/recipes",
-        },
-    });
+  res.status(200).json({
+    status: "activo",
+    message: "API del Recetario funcionando correctamente.",
+    endpoints_principales: {
+      auth: "/api/auth",
+      recetas: "/api/recipes",
+      favoritos: "/api/favorites",
+    },
+  });
 });
 
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
-// Configuración de rutas
-app.use("/api/auth", authRoutes); 
+app.use("/api/auth", authRoutes);
 app.use("/api/recipes", recipesRouter);
-//app.use("/api/favorites", favoritesRouter);
+app.use("/api/favorites", favoritesRouter);
 app.use("/rdf", rdfRoutes);
 
 const PORT = process.env.PORT || 3001;
