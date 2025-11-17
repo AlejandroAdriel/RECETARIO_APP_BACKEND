@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-const ALLOWED_RESTRICTIONS = ["vegetariano", "sin lacteos", "sin gluten"];
-
 const recipeSchema = new mongoose.Schema(
   {
     _id: {
@@ -38,20 +36,8 @@ const recipeSchema = new mongoose.Schema(
       required: true,
     },
     restrictions: {
-      type: [String],
-      default: [],
-      validate: {
-        validator: function (v) {
-          if (v.length === 0) return true;
-          return v.every((val) => ALLOWED_RESTRICTIONS.includes(val));
-        },
-        message: (props) =>
-          `Restricción no válida. Las opciones permitidas son: ${ALLOWED_RESTRICTIONS.join(
-            ", "
-          )}. Valor(es) recibido(s): ${props.value
-            .filter((val) => !ALLOWED_RESTRICTIONS.includes(val))
-            .join(", ")}.`,
-      },
+      type: String,
+      default: "",
     },
     ingredients: [String],
     instructions: [String],
