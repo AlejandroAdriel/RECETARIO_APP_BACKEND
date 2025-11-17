@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import path from "path";
@@ -8,6 +8,7 @@ import recipesRouter from "./routes/recipesRoutes.js";
 import favoritesRouter from "./routes/favoritesRoutes.js";
 import rdfRoutes from "./routes/rdfRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import commentsRouter from "./routes/commentsRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,13 +22,13 @@ app.use(
       "http://localhost:5173",
       "https://super-recetario.vercel.app",
     ],
-    methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
+    methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
   })
 );
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({
     status: "activo",
     message: "API del Recetario funcionando correctamente.",
@@ -35,6 +36,7 @@ app.get('/', (req, res) => {
       auth: "/api/auth",
       recetas: "/api/recipes",
       favoritos: "/api/favorites",
+      comments: "/api/comments",
     },
   });
 });
@@ -45,6 +47,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/recipes", recipesRouter);
 app.use("/api/favorites", favoritesRouter);
 app.use("/rdf", rdfRoutes);
+app.use("/api/comments", commentsRouter);
 
 const PORT = process.env.PORT || 3001;
 
