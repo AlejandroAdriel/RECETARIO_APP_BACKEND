@@ -29,21 +29,6 @@ const recipeSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       enum: ["Fácil", "Intermedio", "Difícil"],
-      required: true,
-    },
-    category: {
-      type: String,
-      required: true,
-    },
-    restrictions: {
-      type: String,
-      default: "",
-    },
-    ingredients: [String],
-    instructions: [String],
-  },
-  {
-    timestamps: true,
     _id: false,
   }
 );
