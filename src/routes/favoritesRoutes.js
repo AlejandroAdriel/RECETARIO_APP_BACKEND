@@ -1,48 +1,60 @@
-import { Router } from "express";
-import Favorite from "../models/favoriteModel.js";
+import express from 'express';
+import { supabase } from '../supabaseClient.js';
 
-const router = Router();
+const router = express.Router();
 
-router.get("/:userId", async (req, res) => {
+// Agregar a favoritos
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { recipeId } = req.body;
+
   try {
-    const { userId } = req.params;
-    const favs = await Favorite.find({ userId }).lean();
-    res.status(200).json(favs);
+    const { data, error } = await supabase.rpc('append_recipe', {
+      user_id: id,
+      recipe_id: recipeId
+    });
+    if (error) throw error;
+    res.json({ favorite_recipes: data });
   } catch (err) {
-    console.error("GET /favorites error:", err);
-    res.status(500).json({ error: "Error al obtener favoritos" });
+    res.status(500).json({ error: err.message });
   }
 });
 
-router.post("/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { recipeId } = req.body;
-    if (!recipeId) return res.status(400).json({ error: "recipeId es requerido" });
+// Obtener todos los favoritos de un usuario
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
 
-    const created = await Favorite.create({ userId, recipeId });
-    res.status(201).json(created);
+  try {
+    const { data, error } = await supabase
+      .from('favorites')
+      .select('*')
+      .eq('user_id', id);
+
+    if (error) throw error;
+
+    res.json(data);
   } catch (err) {
-    if (err.code === 11000) {
-      return res.status(200).json({ message: "Ya estaba en favoritos" });
-    }
-    console.error("POST /favorites error:", err);
-    res.status(500).json({ error: "Error al agregar a favoritos" });
+    res.status(500).json({ error: err.message });
   }
 });
 
-router.delete("/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { recipeId } = req.body;
-    if (!recipeId) return res.status(400).json({ error: "recipeId es requerido" });
+// Eliminar un favorito
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { recipeId } = req.body;
 
-    const result = await Favorite.findOneAndDelete({ userId, recipeId }).lean();
-    if (!result) return res.status(404).json({ error: "Favorito no encontrado" });
-    res.status(200).json({ message: "Eliminado de favoritos" });
+  try {
+    const { error } = await supabase
+      .from('favorites')
+      .delete()
+      .eq('user_id', id)
+      .eq('recipe_id', recipeId);
+
+    if (error) throw error;
+
+    res.json({ message: 'Favorito eliminado correctamente' });
   } catch (err) {
-    console.error("DELETE /favorites error:", err);
-    res.status(500).json({ error: "Error al eliminar de favoritos" });
+    res.status(500).json({ error: err.message });
   }
 });
 
