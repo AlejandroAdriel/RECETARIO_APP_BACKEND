@@ -29,7 +29,7 @@ const recipeSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       enum: ["Fácil", "Intermedio", "Difícil"],
-    _id: false,
+    },
   }
 );
 
