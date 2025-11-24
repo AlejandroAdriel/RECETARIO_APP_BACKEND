@@ -1,8 +1,10 @@
+// src/routes/rdfRoutes.js
 import express from "express";
 import Recipe from "../models/recipeModel.js";
 
 const router = express.Router();
 
+// Escapar caracteres especiales para XML
 const xmlEscape = (s = "") =>
   String(s)
     .replace(/&/g, "&amp;")
@@ -14,7 +16,7 @@ router.get("/:id", async (req, res) => {
     const receta = await Recipe.findById(req.params.id);
     if (!receta) return res.status(404).send("Receta no encontrada");
 
-    const base = "https://superrecetario.com";
+    const base = "https://recetario-app-backend.onrender.com";
     const resourceURI = `${base}/resource/${receta._id}`;
     const ontology = `${base}/ontology/`;
 
