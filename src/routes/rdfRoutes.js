@@ -11,6 +11,7 @@ const xmlEscape = (s = "") =>
 
 router.get("/:id", async (req, res) => {
   try {
+
     const receta = await Recipe.findOne({ _id: req.params.id });
 
     if (!receta) {
