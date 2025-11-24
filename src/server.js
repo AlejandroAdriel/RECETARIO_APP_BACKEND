@@ -42,12 +42,14 @@ app.get("/", (req, res) => {
 });
 
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
+app.use("/ontology", express.static(path.join(process.cwd(), "public/ontology")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/recipes", recipesRouter);
 app.use("/api/favorites", favoritesRouter);
 app.use("/rdf", rdfRoutes);
 app.use("/api/comments", commentsRouter);
+
 
 const PORT = process.env.PORT || 3001;
 

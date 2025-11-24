@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+  xmlns:ex="https://superrecetario.com/ontology/"
+>
+
+  <owl:Ontology rdf:about="https://superrecetario.com/ontology/">
+    <rdfs:comment>Ontología mínima para SuperRecetario</rdfs:comment>
+  </owl:Ontology>
+
+  <!-- Clases -->
+  <owl:Class rdf:about="https://superrecetario.com/ontology/Receta"/>
+  <owl:Class rdf:about="https://superrecetario.com/ontology/Ingrediente"/>
+  <owl:Class rdf:about="https://superrecetario.com/ontology/Categoria"/>
+
+  <!-- Propiedades de datos -->
+  <owl:DatatypeProperty rdf:about="https://superrecetario.com/ontology/nombre">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+    <rdfs:label>nombre</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="https://superrecetario.com/ontology/descripcion">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="https://superrecetario.com/ontology/imagen">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="xsd:anyURI"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="https://superrecetario.com/ontology/tiempoCoccion">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="xsd:integer"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="https://superrecetario.com/ontology/porciones">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="xsd:integer"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="https://superrecetario.com/ontology/dificultad">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="https://superrecetario.com/ontology/restricciones">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+  </owl:DatatypeProperty>
+
+  <!-- Propiedades de objeto -->
+  <owl:ObjectProperty rdf:about="https://superrecetario.com/ontology/ingrediente">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="https://superrecetario.com/ontology/Ingrediente"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://superrecetario.com/ontology/categoria">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="https://superrecetario.com/ontology/Categoria"/>
+  </owl:ObjectProperty>
+
+  <owl:DatatypeProperty rdf:about="https://superrecetario.com/ontology/paso">
+    <rdfs:domain rdf:resource="https://superrecetario.com/ontology/Receta"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+  </owl:DatatypeProperty>
+
+</rdf:RDF>
