@@ -30,6 +30,18 @@ const recipeSchema = new mongoose.Schema(
       type: String,
       enum: ["Fácil", "Intermedio", "Difícil"],
     },
+    category: {
+      type: String,
+    },
+    ingredients: {
+      type: [String],
+    },
+    instructions: {
+      type: [String],
+    },
+    restrictions: {
+      type: [String],
+    },
   }
 );
 
@@ -40,15 +52,12 @@ recipeSchema.pre("validate", async function (next) {
         .model("Recipe")
         .findOne()
         .sort({ _id: -1 });
-
-      let nextNumber = 1;
-      if (lastRecipe && lastRecipe._id) {
-        nextNumber = parseInt(lastRecipe._id) + 1;
-      }
-
+      const nextNumber = lastRecipe ? parseInt(lastRecipe._id, 10) + 1 : 1;
       const recipeId = String(nextNumber).padStart(6, "0");
       this._id = recipeId;
-      this.image = `/assets/images/recipes/${recipeId}.jpg`;
+      if (!this.image) {
+        this.image = `/assets/images/recipes/${recipeId}.jpg`;
+      }
 
       next();
     } catch (error) {
