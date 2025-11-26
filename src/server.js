@@ -49,6 +49,7 @@ app.use("/api/recipes", recipesRouter);
 app.use("/api/favorites", favoritesRouter);
 app.use("/rdf", rdfRoutes);
 app.use("/api/comments", commentsRouter);
+app.use("/api/rdf", rdfRoutes);
 
 
 const PORT = process.env.PORT || 3001;
