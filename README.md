@@ -13,10 +13,10 @@ El backend utiliza una **arquitectura híbrida** de base de datos para aprovecha
 
 ```mermaid
 graph TD
-    Client[Cliente (Frontend)]
-    API[API Express]
-    Mongo[(MongoDB - Recetas)]
-    Supa[(Supabase - Usuarios/Comentarios/Favoritos)]
+    Client["Cliente (Frontend)"]
+    API["API Express"]
+    Mongo[("MongoDB - Recetas")]
+    Supa[("Supabase - Usuarios/Comentarios/Favoritos")]
 
     Client -->|Peticiones HTTP| API
     API -->|Consultas/Escritura| Mongo
