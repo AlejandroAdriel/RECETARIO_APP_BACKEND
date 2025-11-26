@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 const router = express.Router();
 
-// Crear una nueva receta
+
 router.post("/", async (req, res) => {
   try {
     const {
@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Obtener todas las recetas
+
 router.get("/", async (req, res) => {
   try {
     const recipes = await Recipe.find();
@@ -65,7 +65,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Obtener una receta por id
+
 router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -78,7 +78,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Editar una receta (PUT - Reemplazo Completo)
+
 router.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -112,7 +112,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Actualización parcial de receta
+
 router.patch("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -136,7 +136,7 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-// Eliminar una receta
+
 router.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;

@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient.js';
 
 const router = express.Router();
 
-// Agregar a favoritos
+
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { recipeId } = req.body;
@@ -20,7 +20,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Obtener todos los favoritos de un usuario
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -38,7 +38,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Eliminar un favorito
+
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   const { recipeId } = req.body;

@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { supabase } from "../supabaseClient.js";
-// import authMiddleware from "../middleware/auth.js"; // <-- Futuro middleware de autenticación
 
 const router = Router();
 
@@ -22,14 +21,9 @@ router.get("/:recipeId", async (req, res) => {
   }
 });
 
-//Esta ruta debería estar protegida por un middleware de autenticación.
-// router.post("/:recipeId", authMiddleware, async (req, res) => { // <-- Implementación ideal
 router.post("/:recipeId", async (req, res) => { 
   try {
     const { recipeId } = req.params;
-    
-    // 'userId' debería venir de 'req.user.id' (inyectado por el middleware de auth)
-    // 'content' viene del body
     const { content, userId } = req.body; 
 
     if (!content || !userId) {
@@ -41,7 +35,7 @@ router.post("/:recipeId", async (req, res) => {
       .insert([
         { 
           recipe_id: recipeId, 
-          user_id: userId, // <-- Idealmente: req.user.id
+          user_id: userId,
           content: content 
         }
       ])
@@ -56,15 +50,10 @@ router.post("/:recipeId", async (req, res) => {
   }
 });
 
-// * Esta ruta debería estar protegida por un middleware de autenticación.
-// router.delete("/:commentId", authMiddleware, async (req, res) => { // <-- Implementación ideal
 router.delete("/:commentId", async (req, res) => {
   try {
     const { commentId } = req.params;
-    
-    // 'userId' debe venir de 'req.user.id' para que la política RLS de Supabase
-    // (auth.uid() = user_id) funcione correctamente.
-    const { userId } = req.body; // <-- Idealmente: req.user.id
+    const { userId } = req.body;
 
     if (!userId) {
        return res.status(401).json({ error: "No autenticado" });
