@@ -16,7 +16,7 @@ graph TD
     Client["Cliente (Frontend)"]
     API["API Express"]
     Mongo[("MongoDB - Recetas")]
-    Supa[("Supabase - Usuarios/Comentarios/Favoritos")]
+    Supa[("Supabase (Auth/DB)")]
 
     Client -->|Peticiones HTTP| API
     API -->|Consultas/Escritura| Mongo
