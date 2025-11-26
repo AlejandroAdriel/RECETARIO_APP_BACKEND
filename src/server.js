@@ -36,7 +36,6 @@ app.get("/", (req, res) => {
       auth: "/api/auth",
       recetas: "/api/recipes",
       favoritos: "/api/favorites",
-      rdf: "/api/rdf",
       comments: "/api/comments",
     },
   });
@@ -48,8 +47,9 @@ app.use("/ontology", express.static(path.join(process.cwd(), "public/ontology"))
 app.use("/api/auth", authRoutes);
 app.use("/api/recipes", recipesRouter);
 app.use("/api/favorites", favoritesRouter);
-app.use("/api/rdf", rdfRoutes); 
+app.use("/rdf", rdfRoutes);
 app.use("/api/comments", commentsRouter);
+
 
 const PORT = process.env.PORT || 3001;
 
