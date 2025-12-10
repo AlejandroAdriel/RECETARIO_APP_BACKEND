@@ -8,17 +8,14 @@
 >
 
   <owl:Ontology rdf:about="https://recetario-app-backend.onrender.com/ontology/">
-    <rdfs:comment>Ontología mínima para SuperRecetario</rdfs:comment>
+    <rdfs:comment>Ontología para SuperRecetario</rdfs:comment>
   </owl:Ontology>
 
   <owl:Class rdf:about="https://recetario-app-backend.onrender.com/ontology/Receta"/>
-  <owl:Class rdf:about="https://recetario-app-backend.onrender.com/ontology/Ingrediente"/>
-  <owl:Class rdf:about="https://recetario-app-backend.onrender.com/ontology/Categoria"/>
 
   <owl:DatatypeProperty rdf:about="https://recetario-app-backend.onrender.com/ontology/nombre">
     <rdfs:domain rdf:resource="https://recetario-app-backend.onrender.com/ontology/Receta"/>
     <rdfs:range rdf:resource="xsd:string"/>
-    <rdfs:label>nombre</rdfs:label>
   </owl:DatatypeProperty>
 
   <owl:DatatypeProperty rdf:about="https://recetario-app-backend.onrender.com/ontology/descripcion">
@@ -51,15 +48,15 @@
     <rdfs:range rdf:resource="xsd:string"/>
   </owl:DatatypeProperty>
 
-  <owl:ObjectProperty rdf:about="https://recetario-app-backend.onrender.com/ontology/ingrediente">
+  <owl:DatatypeProperty rdf:about="https://recetario-app-backend.onrender.com/ontology/ingrediente">
     <rdfs:domain rdf:resource="https://recetario-app-backend.onrender.com/ontology/Receta"/>
-    <rdfs:range rdf:resource="https://recetario-app-backend.onrender.com/ontology/Ingrediente"/>
-  </owl:ObjectProperty>
+    <rdfs:range rdf:resource="xsd:string"/>
+  </owl:DatatypeProperty>
 
-  <owl:ObjectProperty rdf:about="https://recetario-app-backend.onrender.com/ontology/categoria">
+  <owl:DatatypeProperty rdf:about="https://recetario-app-backend.onrender.com/ontology/categoria">
     <rdfs:domain rdf:resource="https://recetario-app-backend.onrender.com/ontology/Receta"/>
-    <rdfs:range rdf:resource="https://recetario-app-backend.onrender.com/ontology/Categoria"/>
-  </owl:ObjectProperty>
+    <rdfs:range rdf:resource="xsd:string"/>
+  </owl:DatatypeProperty>
 
   <owl:DatatypeProperty rdf:about="https://recetario-app-backend.onrender.com/ontology/paso">
     <rdfs:domain rdf:resource="https://recetario-app-backend.onrender.com/ontology/Receta"/>

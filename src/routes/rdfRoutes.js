@@ -11,14 +11,13 @@ const xmlEscape = (s = "") =>
 
 router.get("/:id", async (req, res) => {
   try {
-
     const receta = await Recipe.findOne({ _id: req.params.id });
 
     if (!receta) {
       return res.status(404).send("Receta no encontrada");
     }
 
-    const base = "https://recetario-app-backend.onrender.com";
+    const base = process.env.API_BASE_URL || "https://recetario-app-backend.onrender.com";
     const resourceURI = `${base}/resource/${receta._id}`;
     const ontology = `${base}/ontology/`;
 
@@ -35,9 +34,9 @@ router.get("/:id", async (req, res) => {
     <rdf:type rdf:resource="${ontology}Receta"/>
     <ex:nombre>${xmlEscape(receta.name)}</ex:nombre>
     <ex:descripcion>${xmlEscape(receta.description)}</ex:descripcion>
-    <ex:imagen>${xmlEscape(receta.image)}</ex:imagen>
-    <ex:tiempoCoccion>${receta.cookTime}</ex:tiempoCoccion>
-    <ex:porciones>${receta.servings}</ex:porciones>
+    <ex:imagen rdf:resource="${xmlEscape(receta.image)}"/>
+    <ex:tiempoCoccion rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">${receta.cookTime}</ex:tiempoCoccion>
+    <ex:porciones rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">${receta.servings}</ex:porciones>
     <ex:dificultad>${xmlEscape(receta.difficulty)}</ex:dificultad>
     <ex:categoria>${xmlEscape(receta.category)}</ex:categoria>
 
@@ -49,18 +48,14 @@ router.get("/:id", async (req, res) => {
 
     ${Array.isArray(receta.instructions)
       ? receta.instructions
-          .map(
-            (i, idx) =>
-              `    <ex:paso${idx + 1}>${xmlEscape(i)}</ex:paso${idx + 1}>`
-          )
+          .map((i) => `    <ex:paso>${xmlEscape(i)}</ex:paso>`)
           .join("\n")
       : ""}
 
-    ${
-      receta.restrictions
-        ? `    <ex:restricciones>${xmlEscape(receta.restrictions)}</ex:restricciones>`
-        : ""
-    }
+    ${Array.isArray(receta.restrictions) 
+      ? receta.restrictions.map(r => `    <ex:restricciones>${xmlEscape(r)}</ex:restricciones>`).join("\n")
+      : ""}
+      
   </rdf:Description>
 
 </rdf:RDF>`;
